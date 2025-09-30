@@ -68,10 +68,8 @@ Please refer the path - `docs/architectural_diagram_aws.png` to view the overall
 
 Clone the Repository
 
-- git clone git@gitlab.com:assignments7990138/events-ec2.git
+- git clone git@github.com:Sitalasandhya/events-ec2.git
 - cd events-ec2
-
-you can do the setup in AWS account and start testing using Postman application.
 
 AWS account setup
 
