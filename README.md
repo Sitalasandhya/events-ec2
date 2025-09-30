@@ -169,7 +169,9 @@ In the code editor, please follow the below steps.
 
     pip install -r requirements.txt
 
-* The different testcase scenarios are validated using the test_api_authorizer_based.py and test_api_iam_based.py. Please validate different use cases.
+* The different testcase scenarios are validated using the test_api_authorizer_based.py and test_api_iam_based.py.
+
+Please refer Testcases_aws_ec2_actions_api.docx to check different testcases for this project.
 
 
 
