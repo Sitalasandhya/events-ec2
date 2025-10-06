@@ -174,6 +174,6 @@ In the code editor, please follow the below steps.
 Please refer Testcases_aws_ec2_actions_api.docx to check different testcases for this project.
 
 
-
+NOTE - The automation script using Terraform and GitHub Actions is in progress.
 
 
