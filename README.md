@@ -12,7 +12,8 @@ Serverless AWS EC2 Actions API using Lambda
 * Architectural Components
 * Architectural Diagram
 * Prerequisites
-* Setup Instruction
+* Manual Setup Instruction
+* Automation setup Instruction
 * Testing Instruction
 
 
@@ -62,7 +63,7 @@ Please refer the path - `docs/architectural_diagram_aws.png` to view the overall
 
 
 
-**Setup Instruction**
+**Manual Setup Instruction**
 
 
 
@@ -70,6 +71,7 @@ Clone the Repository
 
 - git clone git@github.com:Sitalasandhya/events-ec2.git
 - cd events-ec2
+
 
 AWS account setup
 
@@ -145,6 +147,56 @@ After any successful operation, we can see the ec2 instance actions in the EC2 M
 
 
 
+**Automation Setup Instruction**
+
+The complete project setup can be done using Terraform autiomation script.
+
+Before proceeding, please clone the Repository.
+
+- git clone git@github.com:Sitalasandhya/events-ec2.git
+- cd events-ec2
+
+Steps to execute the Terraform code:
+
+1. Install Terraform in your system using the below url -
+
+               https://developer.hashicorp.com/terraform/install
+
+2. Once installed, please open your cmd and run the below command to check whether it is installed properly or not.
+
+               terraform --version
+
+3. Update your system environment variables to include the terraform path.
+4. Create a directory for terraform and keep these below files.
+       1. main.tf
+       2. provider.tf
+       3. var.tf
+       4. lambda_function_payload.zip
+5. Open gitbash or cmd and navigate to your terraform directory.
+6. Configure AWS CLI using aws configure or the the credentials can be exported like below.
+
+           export AWS_ACCESS_KEY_ID = your_key
+           export AWS_SECRET_ACCESS_KEY = your_secret
+           export AWS_DEFAULT_REGION = us-east-1 # provide the region name where you want the setup and mention the same region name in the var.tf file.
+7. Initialize the terraform script using the below command.
+
+           terraform init
+
+8. Preview the changes using the below Terraform command.
+
+           terraform plan
+
+9. Apply the changes using the below Terraform command.
+
+            terraform apply
+
+Once this command is run, it will be prompted to confirm about the changes. Once confirmed, This provisions the infrastructure on AWS.
+
+10. Please refer Terraform documentation for any queries regarding this.
+
+
+
+
 **Testing Instruction**
 
 For testing the api endpoints, we can follow the below steps.
@@ -174,6 +226,6 @@ In the code editor, please follow the below steps.
 Please refer Testcases_aws_ec2_actions_api.docx to check different testcases for this project.
 
 
-NOTE - The automation script using Terraform and GitHub Actions is in progress.
+NOTE - Please update the api endpoints in the python testing files if the project setup is done using Terraform code.
 
 
