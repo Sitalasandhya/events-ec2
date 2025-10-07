@@ -137,7 +137,82 @@ resource "aws_api_gateway_stage" "api_stage" {
   deployment_id  = aws_api_gateway_deployment.api_deployment.id
 }
 
+
+# Lambda Function for authorizer
+resource "aws_lambda_function" "tf_events_authorizer" {
+  function_name = "tf_events_authorizer"
+  role          = aws_iam_role.tf_lambda_ec2_actions.arn
+  handler       = "lambda_function.lambda_handler"
+  runtime       = "python3.13"
+  filename      = "lambda_authorizer.zip"
+  source_code_hash = filebase64sha256("lambda_authorizer.zip")
+  timeout = 61
+}
+
+resource "aws_api_gateway_authorizer" "lambda_auth" {
+  name                   = "tf_events_authorizer"
+  rest_api_id            = aws_api_gateway_rest_api.api_gateway.id
+  authorizer_uri         = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.tf_events_authorizer.arn}/invocations"
+  authorizer_result_ttl_in_seconds = 300
+  type                   = "TOKEN"
+  identity_source        = "method.request.header.auth-token"
+}
+
+# API Resource in REST API using lambda authorizer
+resource "aws_api_gateway_resource" "events_resource" {
+  rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+  parent_id   = aws_api_gateway_rest_api.api_gateway.root_resource_id
+  path_part   = "events"
+}
+
+
+#API Resource with method with Lambda authorizer
+resource "aws_api_gateway_method" "lambda_auth_integration" {
+  rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
+  resource_id   = aws_api_gateway_resource.events_resource.id
+  http_method   = "POST"
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.lambda_auth.id
+}
+
+# Integration with Lambda with lambda authorizer
+resource "aws_api_gateway_integration" "events_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.api_gateway.id
+  resource_id             = aws_api_gateway_resource.events_resource.id
+  http_method             = aws_api_gateway_method.lambda_auth_integration.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.tf_events_ec2_actions.invoke_arn
+}
+
+# Lambda Permission for API Gateway with lambda authorizer
+resource "aws_lambda_permission" "api_gateway_auth_permission" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.tf_events_authorizer.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.api_gateway.execution_arn}/*/*"
+}
+
+# Deployment with lambda authorizer
+resource "aws_api_gateway_deployment" "api_auth_deployment" {
+  depends_on  = [aws_api_gateway_integration.events_integration]
+  rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+}
+
+#Deployment with stage with lambda authorizer
+resource "aws_api_gateway_stage" "api_auth_stage" {
+  rest_api_id    = aws_api_gateway_rest_api.api_gateway.id
+  stage_name     = "test1"
+  deployment_id  = aws_api_gateway_deployment.api_auth_deployment.id
+}
+
+
 # Output API Endpoint
 output "api_endpoint" {
   value = "https://${aws_api_gateway_rest_api.api_gateway.id}.execute-api.${var.region}.amazonaws.com/${aws_api_gateway_stage.api_stage.stage_name}/actions"
+}
+
+output "api_endpoint_auth" {
+  value = "https://${aws_api_gateway_rest_api.api_gateway.id}.execute-api.${var.region}.amazonaws.com/${aws_api_gateway_stage.api_auth_stage.stage_name}/events"
 }
