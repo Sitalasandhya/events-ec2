@@ -154,7 +154,7 @@ The complete project setup can be done using Terraform autiomation script.
 Before proceeding, please clone the Repository.
 
 - git clone git@github.com:Sitalasandhya/events-ec2.git
-- cd events-ec2
+- cd events-ec2/terraform
 
 Steps to execute the Terraform code:
 
@@ -167,32 +167,25 @@ Steps to execute the Terraform code:
                terraform --version
 
 3. Update your system environment variables to include the terraform path.
-4. Create a directory for terraform and keep these below files.
-       1. main.tf
-       2. provider.tf
-       3. var.tf
-       4. lambda_function_payload.zip
-5. Open gitbash or cmd and navigate to your terraform directory.
-6. Configure AWS CLI using aws configure or the the credentials can be exported like below.
+4. Open gitbash or cmd and navigate to your terraform directory.
+5. Configure AWS CLI using aws configure or the the credentials can be exported like below.
 
            export AWS_ACCESS_KEY_ID = your_key
            export AWS_SECRET_ACCESS_KEY = your_secret
            export AWS_DEFAULT_REGION = us-east-1 # provide the region name where you want the setup and mention the same region name in the var.tf file.
-7. Initialize the terraform script using the below command.
+6. Initialize the terraform script using the below command.
 
            terraform init
 
-8. Preview the changes using the below Terraform command.
+7. Preview the changes using the below Terraform command.
 
            terraform plan
 
-9. Apply the changes using the below Terraform command.
+8. Apply the changes using the below Terraform command.
 
             terraform apply
 
 Once this command is run, it will be prompted to confirm about the changes. Once confirmed, This provisions the infrastructure on AWS.
-
-10. Please refer Terraform documentation for any queries regarding this.
 
 
 
