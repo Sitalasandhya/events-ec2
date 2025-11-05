@@ -219,6 +219,6 @@ In the code editor, please follow the below steps.
 Please refer Testcases_aws_ec2_actions_api.docx to check different testcases for this project.
 
 
-NOTE - Please update the api endpoints in the python testing files if the project setup is done using Terraform code.
+NOTE - Please update the api endpoints in the python testing files if the project setup is done using Terraform code. The automation setup process using Github Actions is in progress and will be updated soon.
 
 
